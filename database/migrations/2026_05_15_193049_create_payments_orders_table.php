@@ -15,9 +15,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('order_id')->constrained('orders');
-            $table->foreign('client_id')->constrained('clients');
-            
-            $table->enum('status', ['pending', 'paid', 'cancelled']);
+            $table->foreignId('client_id')->constrained('clients');
+            $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
             $table->decimal('value', 10, 2);
             $table->date('due_date');
             $table->date('payment_date')->nullable();
