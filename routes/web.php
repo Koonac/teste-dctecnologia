@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(function () {
 
     // ROTAS DE PRODUTOS
     Route::resource('products', ProductController::class);
+
+    // ROTAS DE ORDERS
+    Route::resource('orders', OrderController::class);
 });
 
 require __DIR__.'/auth.php';

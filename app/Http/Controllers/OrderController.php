@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
+use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -12,7 +15,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $orders = Order::with('client')->get();
+        return view('orders.index', compact('orders'));
     }
 
     /**
@@ -20,7 +24,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        $products = Product::all();
+        $clients = Client::all();
+        return view('orders.create', compact('products', 'clients'));
     }
 
     /**

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('total', 10, 2);
             $table->enum('status', ['draft', 'pending', 'paid', 'cancelled'])->default('draft');
             $table->enum('payment_method', ['cash', 'pix', 'card', 'installment']);
-            $table->integer('installment_count')->nullable();
+            $table->integer('installment_count')->nullable()->default(0);
         });
     }
 
