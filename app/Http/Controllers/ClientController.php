@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -12,7 +13,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $models = Client::all();
+
+        return view('clients.index', compact('models'));
     }
 
     /**
@@ -20,7 +23,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        return view('clients.create');
     }
 
     /**
@@ -28,15 +31,19 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        try {
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:clients',
+                'phone' => 'required|string|max:255',
+            ]);
+
+            $model = Client::create($request->all());
+            return redirect()->route('clients.index')->with('success', 'Cliente criado com sucesso');
+        } catch (\Exception $e) {
+            return redirect()->route('clients.create')->with('error', 'Erro ao criar cliente: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -44,7 +51,8 @@ class ClientController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $model = Client::find($id);
+        return view('clients.edit', compact('model'));
     }
 
     /**
@@ -52,7 +60,21 @@ class ClientController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:clients,email,' . $id,
+                'phone' => 'required|string|max:255',
+            ]);
+            $model = Client::find($id);
+            if (!$model) {
+                return redirect()->route('clients.index')->with('error', 'Cliente não encontrado');
+            }
+            $model->update($request->all());
+            return redirect()->route('clients.index')->with('success', 'Cliente atualizado com sucesso');
+        } catch (\Exception $e) {
+            return redirect()->route('clients.index')->with('error', 'Erro ao atualizar cliente');
+        }
     }
 
     /**
@@ -60,6 +82,15 @@ class ClientController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $model = Client::find($id);
+            if (!$model) {
+                return redirect()->route('clients.index')->with('error', 'Cliente não encontrado');
+            }
+            $model->delete();
+            return redirect()->route('clients.index')->with('success', 'Cliente deletado com sucesso');
+        } catch (\Exception $e) {
+            return redirect()->route('clients.index')->with('error', 'Erro ao deletar cliente');
+        }
     }
 }
