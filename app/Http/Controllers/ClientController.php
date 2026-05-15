@@ -13,9 +13,9 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $models = Client::all();
+        $clients = Client::all();
 
-        return view('clients.index', compact('models'));
+        return view('clients.index', compact('clients'));
     }
 
     /**
@@ -39,7 +39,7 @@ class ClientController extends Controller
                 'phone' => 'required|string|max:255',
             ]);
 
-            $model = Client::create($request->all());
+            $client = Client::create($request->all());
             return redirect()->route('clients.index')->with('success', 'Cliente criado com sucesso');
         } catch (\Exception $e) {
             return redirect()->route('clients.create')->with('error', 'Erro ao criar cliente: ' . $e->getMessage());
@@ -51,8 +51,8 @@ class ClientController extends Controller
      */
     public function edit(string $id)
     {
-        $model = Client::find($id);
-        return view('clients.edit', compact('model'));
+        $client = Client::find($id);
+        return view('clients.edit', compact('client'));
     }
 
     /**
@@ -63,14 +63,14 @@ class ClientController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:clients,email,' . $id,
+                'email' => 'required|email|unique:clients,email',
                 'phone' => 'required|string|max:255',
             ]);
-            $model = Client::find($id);
-            if (!$model) {
+            $client = Client::find($id);
+            if (!$client) {
                 return redirect()->route('clients.index')->with('error', 'Cliente não encontrado');
             }
-            $model->update($request->all());
+            $client->update($request->all());
             return redirect()->route('clients.index')->with('success', 'Cliente atualizado com sucesso');
         } catch (\Exception $e) {
             return redirect()->route('clients.index')->with('error', 'Erro ao atualizar cliente');
@@ -83,11 +83,11 @@ class ClientController extends Controller
     public function destroy(string $id)
     {
         try {
-            $model = Client::find($id);
-            if (!$model) {
+            $client = Client::find($id);
+            if (!$client) {
                 return redirect()->route('clients.index')->with('error', 'Cliente não encontrado');
             }
-            $model->delete();
+            $client->delete();
             return redirect()->route('clients.index')->with('success', 'Cliente deletado com sucesso');
         } catch (\Exception $e) {
             return redirect()->route('clients.index')->with('error', 'Erro ao deletar cliente');

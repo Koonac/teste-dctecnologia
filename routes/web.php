@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,9 @@ Route::middleware('auth')->group(function () {
 
     // ROTAS DE CLIENTES
     Route::resource('clients', ClientController::class);
+
+    // ROTAS DE PRODUTOS
+    Route::resource('products', ProductController::class);
 });
 
 require __DIR__.'/auth.php';

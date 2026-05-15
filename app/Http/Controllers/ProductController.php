@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -12,7 +13,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        $products = Product::all();
+
+        return view('products.index', compact('products'));
     }
 
     /**
@@ -20,7 +23,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('products.create');
     }
 
     /**
@@ -28,15 +31,19 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        try {
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string|max:2000',
+                'price' => 'required|numeric|min:0',
+            ]);
+
+            $product = Product::create($request->all());
+            return redirect()->route('products.index')->with('success', 'Produto criado com sucesso');
+        } catch (\Exception $e) {
+            return redirect()->route('products.create')->with('error', 'Erro ao criar produto: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -44,7 +51,8 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $product = Product::find($id);
+        return view('products.edit', compact('product'));
     }
 
     /**
@@ -52,7 +60,21 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'required|string|max:255',
+                'price' => 'required|numeric|min:0',
+            ]);
+            $product = Product::find($id);
+            if (!$product) {
+                return redirect()->route('products.index')->with('error', 'Produto não encontrado');
+            }
+            $product->update($request->all());
+            return redirect()->route('products.index')->with('success', 'Produto atualizado com sucesso');
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')->with('error', 'Erro ao atualizar produto');
+        }
     }
 
     /**
@@ -60,6 +82,15 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $product = Product::find($id);
+            if (!$product) {
+                return redirect()->route('products.index')->with('error', 'Produto não encontrado');
+            }
+            $product->delete();
+            return redirect()->route('products.index')->with('success', 'Produto deletado com sucesso');
+        } catch (\Exception $e) {
+            return redirect()->route('products.index')->with('error', 'Erro ao deletar produto');
+        }
     }
 }
