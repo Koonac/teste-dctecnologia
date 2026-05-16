@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,9 @@ Route::middleware('auth')->group(function () {
 
     // ROTAS DE ORDERS
     Route::resource('orders', OrderController::class);
+
+    // ROTAS DE PAGAMENTOS
+    Route::post('payments/{id}/pay', [PaymentController::class, 'pay'])->name('payments.pay');
 });
 
 require __DIR__.'/auth.php';

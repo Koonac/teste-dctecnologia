@@ -37,7 +37,7 @@
                                 <td class="px-4 py-2">{{ number_format($product->price, 2, ',', '.') }}</td>
                                 <td class="flex items-center justify-center gap-2 text-center px-4 py-2">
                                     <a href="{{ route('products.edit', $product->id) }}" class="text-blue-500 px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-700">Editar</a>
-                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este producte?');" class="inline">
+                                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este produto?');" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-white px-2 py-1 bg-red-500 rounded-md hover:bg-red-700">

@@ -75,7 +75,8 @@
                                         <tr>
                                             <th class="text-left p-2">Produto</th>
                                             <th class="text-center p-2">Quantidade</th>
-                                            <th class="text-right p-2">Preço</th>
+                                            <th class="text-right p-2">Preço Un.</th>
+                                            <th class="text-right p-2">Total</th>
                                             <th class="text-center p-2">Ações</th>
                                         </tr>
                                     </thead>

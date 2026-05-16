@@ -66,6 +66,7 @@ class OrderController extends Controller
                 'user_id' => Auth::id(),
                 'client_id' => empty($request->client_id) ? null : $request->client_id,
                 'total' => $total,
+                'status' => 'pending',
                 'payment_method' => $paymentMethod,
                 'installment_count' => $installmentCount,
             ]);
@@ -102,23 +103,8 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        $order = Order::with('client', 'products', 'payments')->find($id);
+        return view('orders.show', compact('order'));
     }
 
     /**
@@ -126,6 +112,8 @@ class OrderController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $order = Order::find($id);
+        $order->delete();
+        return redirect()->route('orders.index')->with('success', 'Pedido deletado com sucesso');
     }
 }

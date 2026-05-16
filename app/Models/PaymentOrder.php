@@ -17,6 +17,11 @@ class PaymentOrder extends Model
         'payment_date',
     ];
     
+    protected $casts = [
+        'due_date' => 'date',
+        'payment_date' => 'date',
+    ];
+
     public function order() {
         return $this->belongsTo(Order::class);
     }

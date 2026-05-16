@@ -90,6 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <td class="text-left p-2">${product.name}</td>
             <td class="text-center p-2">${p.quantity}</td>
             <td class="text-right p-2">${formatReal(p.price)}</td>
+            <td class="text-right p-2">${formatReal(p.price * p.quantity)}</td>
             <td class="text-center p-2">
                 <button type="button" class="text-red-500 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700">
                     <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">

@@ -17,9 +17,10 @@
                     <table class="w-full">
                         <thead>
                             <tr>
-                                <th class="text-left px-4" width="50%">Nome</th>
-                                <th class="text-left px-4" width="50%">Descrição</th>
-                                <th class="text-left px-4" width="1%">Preço</th>
+                                <th class="text-left px-4" width="1%">Pedido</th>
+                                <th class="text-left px-4" width="50%">Cliente</th>
+                                <th class="text-left px-4" width="1%">Total</th>
+                                <th class="text-left px-4" width="1%">Status</th>
                                 <th class="text-center px-4" width="1%">Ações</th>
                             </tr>
                         </thead>
@@ -27,17 +28,18 @@
                             @if ($orders->count() > 0)
                             @else
                             <tr>
-                                <td colspan="4" class="text-center px-4 py-2">Nenhum produto encontrado</td>
+                                <td colspan="4" class="text-center px-4 py-2">Nenhum pedido encontrado</td>
                             </tr>
                             @endif
                             @foreach ($orders as $order)
                             <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                <td class="px-4 py-2">{{ $order->name }}</td>
-                                <td class="px-4 py-2">{{ strlen($order->description) > 100 ? substr($order->description, 0, 100) . '...' : $order->description }}</td>
-                                <td class="px-4 py-2">{{ number_format($order->price, 2, ',', '.') }}</td>
+                                <td class="px-4 py-2">{{ $order->id }}</td>
+                                <td class="px-4 py-2">{{ $order->client ? $order->client->name : 'Não informado' }}</td>
+                                <td class="px-4 py-2">{{ number_format($order->total, 2, ',', '.') }}</td>
+                                <td class="px-4 py-2">{{ $order->status_label }}</td>
                                 <td class="flex items-center justify-center gap-2 text-center px-4 py-2">
-                                    <a href="{{ route('orders.edit', $order->id) }}" class="text-blue-500 px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-700">Editar</a>
-                                    <form action="{{ route('orders.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este ordere?');" class="inline">
+                                    <a href="{{ route('orders.show', $order->id) }}" class="text-blue-500 px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-700">Visualizar</a>
+                                    <form action="{{ route('orders.destroy', $order->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja deletar este pedido?');" class="inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="text-white px-2 py-1 bg-red-500 rounded-md hover:bg-red-700">
