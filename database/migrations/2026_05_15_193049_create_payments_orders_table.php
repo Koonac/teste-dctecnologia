@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('payments_orders', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('order_id')->constrained('orders');
-            $table->foreignId('client_id')->constrained('clients');
+            $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            $table->foreignId('client_id')->nullable()->constrained('clients');
             $table->enum('status', ['pending', 'paid', 'cancelled'])->default('pending');
             $table->decimal('value', 10, 2);
-            $table->date('due_date');
+            $table->date('due_date')->nullable();
             $table->date('payment_date')->nullable();
         });
     }

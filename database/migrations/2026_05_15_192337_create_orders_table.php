@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('client_id')->constrained('clients')->nullable();
+            $table->foreignId('client_id')->nullable()->constrained('clients');
             $table->foreignId('user_id')->constrained('users');
             $table->decimal('total', 10, 2);
             $table->enum('status', ['draft', 'pending', 'paid', 'cancelled'])->default('draft');

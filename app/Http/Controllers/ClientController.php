@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
 {
@@ -39,7 +40,10 @@ class ClientController extends Controller
                 'phone' => 'required|string|max:255',
             ]);
 
-            $client = Client::create($request->all());
+            $client = Client::create([
+                ...$request->all(),
+                'user_id' => Auth::id(),
+            ]);
             return redirect()->route('clients.index')->with('success', 'Cliente criado com sucesso');
         } catch (\Exception $e) {
             return redirect()->route('clients.create')->with('error', 'Erro ao criar cliente: ' . $e->getMessage());
