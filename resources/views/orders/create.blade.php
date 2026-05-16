@@ -1,4 +1,8 @@
 <x-app-layout>
+    <script>
+        window.orderProducts = @json($products);
+    </script>
+    @vite(['resources/js/orders.js'])
     <x-slot name="header">
         <div class="flex items-center gap-2">
             <a href="{{ route('orders.index') }}">
@@ -17,7 +21,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <form action="{{ route('orders.store') }}" method="post">
-                        <input type="hidden" name="products[]" id="products">
+                        <input type="hidden" name="products_json" id="products_json">
                         @csrf
                         <div>
                             <label for="name">Cliente</label>
@@ -39,17 +43,22 @@
                                 </select>
                                 <input type="number" id="quantity" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Quantidade" required>
                                 <input type="number" id="price" class="w-full p-2 border border-gray-300 rounded-md" placeholder="Preço" required>
-                                <button type="button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Adicionar</button>
+                                <button type="button" id="add_product_button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Adicionar</button>
                             </div>
                         </div>
                         <div>
-                            <label for="description">Forma de pagamento</label>
-                            <select name="payment_method" id="payment_method" class="w-full p-2 border border-gray-300 rounded-md">
-                                <option value="cash" selected>Dinheiro</option>
-                                <option value="pix">Pix</option>
-                                <option value="card">Cartão</option>
-                                <option value="installment">Parcelado</option>
-                            </select>
+                            <label for="payment_method">Forma de pagamento</label>
+                            <div class="flex gap-2">
+                                <select name="payment_method" id="payment_method" class="w-full p-2 border border-gray-300 rounded-md">
+                                    <option value="" selected>Selecione...</option>
+                                    <option value="cash">Dinheiro (à vista)</option>
+                                    <option value="pix">Pix (à vista)</option>
+                                    <option value="card">Cartão (à vista)</option>
+                                    <option value="installment">Parcelado</option>
+                                </select>
+                                <input type="number" id="installment_count" class="w-22 p-2 border border-gray-300 rounded-md hidden" placeholder="Parcelas" required>
+                                <button type="button" id="add_payment_button" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Adicionar</button>
+                            </div>
                         </div>
                         @if (session('error'))
                         <div class="text-red-500">
@@ -64,16 +73,15 @@
                                     <table class="w-full">
                                         <thead>
                                             <tr>
-                                                <th class="text-left">Produto</th>
-                                                <th class="text-left">Quantidade</th>
-                                                <th class="text-right">Preço</th>
+                                                <th class="text-left p-2">Produto</th>
+                                                <th class="text-center p-2">Quantidade</th>
+                                                <th class="text-right p-2">Preço</th>
+                                                <th class="text-center p-2">Ações</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="products_table" class="py-4 border-t border-gray-300">
                                             <tr>
-                                                <td class="text-left">Produto 1</td>
-                                                <td class="text-left">1</td>
-                                                <td class="text-right">100,00</td>
+                                                <td colspan="3" class="text-center text-gray-500 py-4">Nenhum produto adicionado</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -85,14 +93,15 @@
                                     <table class="w-full">
                                         <thead>
                                             <tr>
-                                                <th class="text-left">Forma de pagamento</th>
-                                                <th class="text-right">Valor</th>
+                                                <th class="text-left p-2">Forma de pagamento</th>
+                                                <th class="text-left p-2">Parcela</th>
+                                                <th class="text-left p-2">Vencimento</th>
+                                                <th class="text-right p-2">Valor</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody class="py-4 border-t border-gray-300">
                                             <tr>
-                                                <td class="text-left">Dinheiro</td>
-                                                <td class="text-right">100,00</td>
+                                                <td colspan="3" class="text-center text-gray-500 py-4">Nenhum produto adicionado</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -101,7 +110,7 @@
                         </div>
                         <div class="flex items-end justify-end gap-2 mt-4 border-t border-gray-300 pt-4">
                             <label for="total" class="text-lg font-bold">Total: </label>
-                            <span id="total" class="text-lg font-bold">0,00</span>
+                            <span id="total_order" class="text-lg font-bold">R$ 0,00</span>
                         </div>
                         <div class="flex items-center gap-2 mt-4">
                             <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Gerar Pedido</button>
