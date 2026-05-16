@@ -1,59 +1,96 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Teste DC Tecnologia
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplicação web para gestão de **clientes**, **produtos**, **pedidos** e **pagamentos**, com autenticação de usuários.
 
-## About Laravel
+## Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| Camada | Tecnologia |
+|--------|------------|
+| Backend | [PHP](https://www.php.net/) 8.2+ · [Laravel](https://laravel.com/) 12 |
+| Autenticação | [Laravel Breeze](https://laravel.com/docs/starter-kits#laravel-breeze) |
+| Banco de dados | [SQLite](https://www.sqlite.org/) (padrão) — suporta MySQL/MariaDB via `.env` |
+| Frontend | [Blade](https://laravel.com/docs/blade) · [Tailwind CSS](https://tailwindcss.com/) |
+| Build | [Vite](https://vitejs.dev/) 7 · [Axios](https://axios-http.com/) |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Pré-requisitos
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2 ou superior (extensões: `openssl`, `pdo`, `mbstring`, `tokenizer`, `xml`, `ctype`, `json`, `bcmath`, `fileinfo`)
+- [Composer](https://getcomposer.org/)
+- [Node.js](https://nodejs.org/) 18+ e npm
 
-## Learning Laravel
+## Como rodar
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### 1. Instalar dependências e configurar o projeto
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+```
 
-## Laravel Sponsors
+Crie o arquivo do banco SQLite (se ainda não existir):
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+touch database/database.sqlite
+```
 
-### Premium Partners
+Execute as migrations:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+php artisan migrate
+```
 
-## Contributing
+Instale os assets do frontend:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+npm install
+npm run build
+```
 
-## Code of Conduct
+> **Atalho:** o script `composer setup` executa os passos acima automaticamente (`composer install`, `.env`, `key:generate`, `migrate`, `npm install` e `npm run build`).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2. Subir a aplicação
 
-## Security Vulnerabilities
+**Desenvolvimento** (servidor PHP + fila + Vite em paralelo):
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+composer dev
+```
 
-## License
+**Ou manualmente**, em dois terminais:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+# Terminal 1
+php artisan serve
+
+# Terminal 2
+npm run dev
+```
+
+Acesse: [http://localhost:8000](http://localhost:8000)
+
+### 3. Primeiro acesso
+
+1. Acesse a página inicial e clique em **Register** para criar um usuário.
+2. Após o login, use o **Dashboard** para acessar clientes, produtos e pedidos.
+
+## Comandos úteis
+
+```bash
+php artisan migrate          # rodar migrations
+php artisan migrate:fresh    # recriar o banco (apaga dados)
+composer test                # executar testes
+npm run build                # build de produção dos assets
+```
+
+## Estrutura principal
+
+- `app/Http/Controllers/` — controllers (Client, Product, Order, Payment)
+- `app/Models/` — modelos Eloquent
+- `resources/views/` — templates Blade
+- `routes/web.php` — rotas da aplicação
+- `database/migrations/` — schema do banco
+
+## Licença
+
+MIT
